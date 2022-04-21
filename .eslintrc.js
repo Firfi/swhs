@@ -1,6 +1,6 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
-  extends: ['plugin:@typescript-eslint/recommended', 'prettier/@typescript-eslint', 'plugin:prettier/recommended'],
+  extends: ['plugin:@typescript-eslint/recommended', 'prettier', 'plugin:prettier/recommended'],
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
@@ -17,5 +17,6 @@ module.exports = {
     'space-in-parens': 'error',
     'no-multiple-empty-lines': 'error',
     'prefer-const': 'error',
+    '@typescript-eslint/no-var-requires': 'off',
   },
 };

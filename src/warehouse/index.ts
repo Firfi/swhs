@@ -1,10 +1,9 @@
-import { H, ProductCode, W, X, Y } from '../types';
-import { XY } from './commands';
+import { H, ProductCode, W, X, Y } from "../types";
+import { XY } from "./commands";
 
 export type Cell = ProductCode | null;
 
 export class Warehouse {
-
   // always at least 1x1
   private store: Cell[][];
   // y's in store are top to down, but the business requirements are bottom to top
@@ -13,7 +12,7 @@ export class Warehouse {
   // }
   set(x: X, y: Y, w: W, h: H, value: ProductCode): void {
     if (w <= 0 || h <= 0) {
-      throw new Error('Invalid dimensions');
+      throw new Error("Invalid dimensions");
     }
     if (!this.isAreaInBounds(x, y, w, h)) throw new Error("Out of bounds");
     if (!this.isFree(x, y, w, h)) throw new Error("Some space is not empty");
@@ -25,10 +24,17 @@ export class Warehouse {
     }
   }
   private isInBounds(x: X, y: Y): boolean {
-    return x >= 0 && x < this.store[0].length && y >= 0 && y < this.store.length;
+    return (
+      x >= 0 && x < this.store[0].length && y >= 0 && y < this.store.length
+    );
   }
   private isAreaInBounds(x: X, y: Y, w: W, h: H): boolean {
-    return x >= 0 && x + w <= this.store[0].length && y >= 0 && y + h <= this.store.length;
+    return (
+      x >= 0 &&
+      x + w <= this.store[0].length &&
+      y >= 0 &&
+      y + h <= this.store.length
+    );
   }
 
   private isFree(x: X, y: Y, w: W, h: H): boolean {
@@ -55,7 +61,7 @@ export class Warehouse {
     return this.store.reduce((acc, row, y) => {
       return row.reduce((acc, cell, x) => {
         if (cell === p) {
-          acc.push({x, y});
+          acc.push({ x, y });
         }
         return acc;
       }, acc);
@@ -69,13 +75,12 @@ export class Warehouse {
       throw new Error("Value not found at coords");
     }
     const coords = this.locate(cell);
-    for (const {x, y} of coords) {
+    for (const { x, y } of coords) {
       this.store[y][x] = null;
     }
   }
 
   view() {
-    return [...this.store].map(row => [...row]).reverse();
+    return [...this.store].map((row) => [...row]).reverse();
   }
-
 }

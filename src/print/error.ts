@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import chalk from "chalk";
 
 export const printError = (error: string) => {
   const eLog = chalk.red(error);
