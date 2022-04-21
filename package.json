@@ -25,7 +25,8 @@
   "scripts": {
     "watch": "nodemon --watch \"*.ts\" --exec \"ts-node\" ./src/index.ts",
     "lint": "eslint --fix --ext .ts src",
-    "test": "ts-jest"
+    "test": "ts-jest",
+    "start": "ts-node ./src/index.ts"
   },
   "dependencies": {
     "chalk": "4.1.2",
