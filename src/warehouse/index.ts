@@ -6,17 +6,21 @@ export type Cell = ProductCode | null;
 export class Warehouse {
 
   // always at least 1x1
-  store: Cell[][];
+  private store: Cell[][];
   // y's in store are top to down, but the business requirements are bottom to top
-  private reverseY(y: Y): Y {
-    return this.store.length - y - 1;
-  }
-  set(x: X, y: Y, w: W, h: H, value: Cell): void {
+  // private reverseY(y: Y): Y {
+  //   return this.store.length - y - 1;
+  // }
+  set(x: X, y: Y, w: W, h: H, value: ProductCode): void {
+    if (w <= 0 || h <= 0) {
+      throw new Error('Invalid dimensions');
+    }
     if (!this.isAreaInBounds(x, y, w, h)) throw new Error("Out of bounds");
     if (!this.isFree(x, y, w, h)) throw new Error("Some space is not empty");
+    if (this.locate(value).length) throw new Error("Value already exists");
     for (let i = 0; i < h; i++) {
       for (let j = 0; j < w; j++) {
-        this.store[this.reverseY(y + i)][x + j] = value;
+        this.store[y + i][x + j] = value;
       }
     }
   }
@@ -30,7 +34,7 @@ export class Warehouse {
   private isFree(x: X, y: Y, w: W, h: H): boolean {
     for (let i = 0; i < h; i++) {
       for (let j = 0; j < w; j++) {
-        if (this.get(y + i, x + j) !== null) {
+        if (!this.isInBounds(x + j, y + i) || this.get(x + j, y + i) !== null) {
           return false;
         }
       }
@@ -39,7 +43,7 @@ export class Warehouse {
   }
   private get(x: X, y: Y): Cell {
     if (!this.isInBounds(x, y)) throw new Error("Out of bounds");
-    return this.store[this.reverseY(y)][x];
+    return this.store[y][x];
   }
 
   constructor(w: W, h: H) {
@@ -51,20 +55,22 @@ export class Warehouse {
     return this.store.reduce((acc, row, y) => {
       return row.reduce((acc, cell, x) => {
         if (cell === p) {
-          acc.push({x, y: this.reverseY(y)});
+          acc.push({x, y});
         }
         return acc;
       }, acc);
     }, [] as XY[]);
   }
 
-  removeOnCoords(x: X, y: Y) {
+  removeAtCoords(x: X, y: Y) {
     if (!this.isInBounds(x, y)) throw new Error("Out of bounds");
     const cell = this.get(x, y);
-    if (cell === null) return; // not an error I'd say
+    if (cell === null) {
+      throw new Error("Value not found at coords");
+    }
     const coords = this.locate(cell);
     for (const {x, y} of coords) {
-      this.store[this.reverseY(y)][x] = null;
+      this.store[y][x] = null;
     }
   }
 

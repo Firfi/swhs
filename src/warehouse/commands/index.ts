@@ -51,14 +51,13 @@ export const commandHandlers: {[k in WarehouseCommand]: CommandF<k>} = {
     checkWhInitialized();
     wh.set(x, y, w, h, p);
   },
-  // todo multiple?
   locate: async ({p}) => {
     checkWhInitialized();
     return wh.locate(p);
   },
   remove: async ({x, y}) => {
     checkWhInitialized();
-    wh.removeOnCoords(x, y);
+    wh.removeAtCoords(x, y);
   },
   view: async () => {
     checkWhInitialized();
