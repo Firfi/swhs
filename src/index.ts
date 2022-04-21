@@ -38,15 +38,17 @@ const r = repl.start({
       .command(
         "locate [P]",
         "Show a list of all locations occupied by product code P.",
-        (argv) => {
-          cb(null, argv);
+        async ({ argv: { _ } }: any) => {
+          const res = await commandHandlers.locate({p: _[1] });
+          cb(null, JSON.stringify(res));
         }
       )
       .command(
         "remove [X] [Y]",
         "Remove the entire crate occupying the location (X,Y).",
-        (argv) => {
-          cb(null, argv);
+        async ({ argv: { _ } }: any) => {
+          await commandHandlers.remove({x: _[1], y: _[2]});
+          cb(null, "removed");
         }
       )
       .command(
